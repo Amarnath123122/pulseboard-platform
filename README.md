@@ -28,6 +28,7 @@ az login
 The admin account is `OwnerEmail`. Its password is generated into `infra/secrets.local.json` (`adminPassword`), which git ignores.
 
 ## Docs
+- [docs/EVIDENCE.md](docs/EVIDENCE.md): captured proof from live Azure, Docker and CI (17/17 end-to-end checks)
 - [docs/MICROSERVICES.md](docs/MICROSERVICES.md): services, gateway, auth and RBAC, reliability, cost, and the end-to-end workflow
 - [docs/SYSTEM_ARCHITECTURE.md](docs/SYSTEM_ARCHITECTURE.md): deep architecture reference
 - `pulseboard-api/docs/`: project guide, caching and performance, runbook

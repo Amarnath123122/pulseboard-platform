@@ -96,7 +96,14 @@ function Deploy-Service([string]$repo, [string]$app, [string]$healthUrl) {
     Assert-Ok "Packaging $repo"
   } finally { Pop-Location }
   # Async: the remote pip install + migrations can outlast Kudu's gateway timeout. Readiness is polled instead.
-  az webapp deploy --resource-group $ResourceGroup --name $app --src-path $zip --type zip --async true --only-show-errors --output none
+  # A previous deployment that is still building returns 409 DeploymentInProgress: wait and retry.
+  for ($try = 1; $try -le 20; $try++) {
+    $outText = az webapp deploy --resource-group $ResourceGroup --name $app --src-path $zip --type zip --async true --only-show-errors --output none 2>&1 | Out-String
+    if ($LASTEXITCODE -eq 0) { break }
+    if ($outText -notmatch "DeploymentInProgress|409") { Write-Host $outText; break }
+    Write-Host "    ${repo}: previous deployment still running, retrying in 30s ($try/20)"
+    Start-Sleep 30
+  }
   Assert-Ok "Deploying $repo"
   $script:pending += , @{ name = $repo; url = $healthUrl }
 }
