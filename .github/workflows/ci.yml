@@ -1,0 +1,17 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bicep compiles
+        run: az bicep build --file infra/main.bicep --stdout > /dev/null
+      - name: Compose file is valid
+        run: |
+          mkdir -p ../pulseboard-identity ../pulseboard-api ../pulseboard-web   # build contexts (not built here)
+          docker compose config -q
+      - name: Gateway config is valid
+        run: |
+          docker run --rm --add-host identity:127.0.0.1 --add-host api:127.0.0.1 --add-host web:127.0.0.1 \
+            -v "$PWD/gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro" nginx:1.27-alpine nginx -t

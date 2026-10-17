@@ -1,0 +1,81 @@
+# The whole Pulseboard system on one machine. Repos must be checked out side by side:
+#   pulseboard-platform/  pulseboard-identity/  pulseboard-api/  pulseboard-web/
+#
+#   docker compose up --build -d
+#   App + API through the gateway: http://localhost:8080      (sign in: admin@example.com / Admin-Pulseboard-2026)
+name: pulseboard
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pulseboard
+      POSTGRES_USER: pulseboard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pulseboard-local}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+    ports: ["5432:5432"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U pulseboard -d pulseboard"], interval: 5s, retries: 20 }
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru", "--save", ""]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, retries: 20 }
+
+  sqs:  # mock AWS
+    image: motoserver/moto:5.0.28
+
+  identity:
+    build: ../pulseboard-identity
+    depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_healthy } }
+    environment:
+      ID_ENVIRONMENT: local
+      ID_DATABASE_URL: postgresql+asyncpg://pulseboard:${POSTGRES_PASSWORD:-pulseboard-local}@postgres:5432/identity
+      ID_DB_AUTO_CREATE: "false"
+      ID_REDIS_URL: redis://redis:6379/1
+      ID_BOOTSTRAP_ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ID_BOOTSTRAP_ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin-Pulseboard-2026}
+      WEB_CONCURRENCY: "2"
+    volumes: ["idkeys:/app/.keys"]  # dev signing key survives restarts
+
+  api:
+    build: ../pulseboard-api
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      identity: { condition: service_healthy }
+      sqs: { condition: service_started }
+    environment:
+      PB_ENVIRONMENT: local
+      PB_DATABASE_URL: postgresql+asyncpg://pulseboard:${POSTGRES_PASSWORD:-pulseboard-local}@postgres:5432/pulseboard
+      PB_DB_AUTO_CREATE: "false"
+      PB_JWKS_URL: http://identity:8000/.well-known/jwks.json
+      PB_CACHE_BACKEND: redis
+      PB_REDIS_URL: redis://redis:6379/0
+      PB_QUEUE_BACKEND: sqs
+      PB_AWS_ENDPOINT_URL: http://sqs:5000
+      PB_CORS_ORIGINS: "[]"  # same origin behind the gateway
+      WEB_CONCURRENCY: "2"
+    ports: ["8000:8000"]  # direct access for /internal ops calls only; browsers use the gateway
+
+  web:
+    build: ../pulseboard-web
+    environment:
+      API_URL: ""
+      AUTH_URL: ""
+      WS_URL: ws://localhost:8080/ws/events
+
+  gateway:
+    image: nginx:1.27-alpine
+    depends_on:
+      identity: { condition: service_healthy }
+      api: { condition: service_healthy }
+      web: { condition: service_started }
+    volumes: ["./gateway/nginx.conf:/etc/nginx/conf.d/default.conf:ro"]
+    ports: ["8080:8080"]
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/gateway/health"], interval: 10s, retries: 10 }
+
+volumes:
+  pgdata:
+  idkeys:
