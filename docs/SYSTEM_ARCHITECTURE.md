@@ -1,5 +1,11 @@
 # Pulseboard: Full System Architecture
 
+> **Current architecture (version 3):** Pulseboard is now four repos: `pulseboard-identity` (accounts, RS256 tokens, JWKS, RBAC), `pulseboard-api`, `pulseboard-web` and `pulseboard-platform` (API gateway, Compose, Azure Bicep, deploy scripts).
+> - **Sign-in:** the demo token endpoint is gone. Users register or sign in with email and password through the gateway, and the API verifies RS256 tokens via JWKS (no shared HS256 secret).
+> - **Where to read more:** [MICROSERVICES.md](MICROSERVICES.md) for services, gateway, auth/RBAC and workflow; [RUNBOOK.md](https://github.com/Amarnath123122/pulseboard-api/blob/main/docs/RUNBOOK.md) for commands.
+> - **Older sections:** where they mention `/auth/dev-token`, `PB_JWT_SECRET`/HS256, or Compose and Azure scripts inside `pulseboard-api`, read them as superseded by the above.
+
+
 > Frontend · Backend · Database · Queue · Azure · CI/CD · Security · Failure modes
 > Every section answers **what, why, how, where, when, who**, plus **what if / what else / where else**.
 
