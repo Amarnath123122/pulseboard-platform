@@ -34,6 +34,43 @@ and keeps it fresh every hour.
 
 ---
 
+## 🎯 Why Pulseboard exists
+
+### The problem
+Teams drown in dashboards. Every department has its own reports, and the numbers that matter get buried among the ones that don't. People find out a metric went wrong **days late**, usually in a meeting, and then lose more time working out *who owns it*, *where the data comes from* and *what to do next*.
+
+### The motive
+Pulseboard flips that around: **you shouldn't have to go looking for problems; they should come to you.**
+
+1. **Tell it what you care about once.** A 30-second chat (your team, the areas you watch, your region) replaces hours of dashboard building.
+2. **See what needs attention first.** Metrics moving the wrong way rise to the top as alerts. Healthy ones stay quietly in the background.
+3. **Get the context, not just the number.** Every alert comes with its trend, regional split, projection, owners, data sources and suggested next steps, so you can act straight away.
+4. **Stay current without effort.** The board re-checks itself every hour and updates live on screen, keeping track of what you've already seen or handled.
+5. **Run it safely as an organisation.** Real sign-in, roles (Viewer, Editor, Admin) and a managed metric catalog mean the right people see and change the right things.
+
+### Who it's for
+| Person | What they get |
+|---|---|
+| **Team leads and managers** | A morning view of exactly what's off-track in their area, with who to talk to |
+| **Analysts and metric owners (Editors)** | One place to define and maintain the metrics everyone watches |
+| **Admins** | Control over who has access and what each role can do |
+
+### The engineering motive
+Beyond the product, Pulseboard is built as a **reference production-grade application**. It shows, end to end and with working evidence, how to build:
+- microservices with a dedicated identity service
+- an API gateway
+- secure token-based auth with RBAC
+- caching without N+1 queries
+- realtime updates over SSE and WebSockets
+- background queues
+- Docker for local parity
+- low-cost Azure deployment with infrastructure as code
+- CI/CD
+
+The metric data is simulated today, but the shape of the system is the same as a real one: plugging in a real data warehouse or a real AI assistant changes one component, not the architecture.
+
+---
+
 ## ✨ Highlights
 
 <table>
