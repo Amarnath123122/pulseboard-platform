@@ -1,5 +1,7 @@
 # Pulseboard: the complete guide
 
+> **Start here.** For the granular A-to-Z architecture with diagrams and real screenshots, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
+>
 > **This is the only document you need.** It explains what Pulseboard is, how every part works, how to run it, deploy it and fix it, and the proof that it works.
 
 **Live:** https://black-mud-02ef90500.6.azurestaticapps.net
