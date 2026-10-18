@@ -4,7 +4,51 @@
 >
 > **This is the only document you need.** It explains what Pulseboard is, how every part works, how to run it, deploy it and fix it, and the proof that it works.
 
-**Live:** https://black-mud-02ef90500.6.azurestaticapps.net
+## Repositories and URLs to test
+
+### Repositories (GitHub, private)
+| Repo | URL |
+|---|---|
+| pulseboard-platform (this guide, gateway, compose, Azure infrastructure) | https://github.com/Amarnath123122/pulseboard-platform |
+| pulseboard-identity (auth microservice) | https://github.com/Amarnath123122/pulseboard-identity |
+| pulseboard-api (domain microservice) | https://github.com/Amarnath123122/pulseboard-api |
+| pulseboard-web (Angular website) | https://github.com/Amarnath123122/pulseboard-web |
+
+### Azure (live)
+| What | URL |
+|---|---|
+| **Website** | https://black-mud-02ef90500.6.azurestaticapps.net |
+| Gateway: identity | https://pb-gw-ktuth67ohzdbe.azure-api.net/identity/.well-known/jwks.json |
+| Gateway: API | https://pb-gw-ktuth67ohzdbe.azure-api.net/core/api/v1/meta (needs a token) |
+| Identity health | https://pb-id-ktuth67ohzdbe.azurewebsites.net/readyz |
+| API health | https://pb-api-ktuth67ohzdbe.azurewebsites.net/readyz |
+| WebSocket | wss://pb-api-ktuth67ohzdbe.azurewebsites.net/ws/events |
+
+**Azure sign-in:**
+- **Admin:** `ak6577751@gmail.com`. The password is `adminPassword` in `infra/secrets.local.json` on the deploying machine.
+- **Other users:** anyone can create an account (VIEWER).
+
+Swagger docs are switched off in production.
+
+### Local, Docker (`docker compose up --build -d`)
+| What | URL |
+|---|---|
+| **Website (through the gateway)** | http://localhost:8080 |
+| Gateway health | http://localhost:8080/gateway/health |
+| Identity keys via gateway | http://localhost:8080/.well-known/jwks.json |
+| API docs (Swagger, direct) | http://localhost:8000/docs |
+| API health (direct) | http://localhost:8000/readyz |
+| Postgres | `localhost:5432`, user `pulseboard`, password `pulseboard-local`, databases `pulseboard`, `identity` |
+
+**Local sign-in:** `admin@example.com` / `Admin-Pulseboard-2026`.
+
+### Local, no Docker (see section 9)
+| What | URL |
+|---|---|
+| **Website (dev server, proxies to both services)** | http://localhost:5173 |
+| Identity Swagger | http://localhost:8100/docs |
+| API Swagger | http://localhost:8000/docs |
+| Mock AWS SQS (moto) | http://localhost:5000 |
 
 ---
 
