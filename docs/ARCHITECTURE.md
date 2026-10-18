@@ -2,7 +2,7 @@
 
 A granular reference for every layer of Pulseboard: the business view, the components, data, security, runtime, deployment and operations. All screenshots are real captures of the running system (`scripts/screenshots.py`); the last two come from the live Azure deployment.
 
-> Short on time? The [README](../README.md) is the summary. This file is the deep dive.
+> Short on time? The [Guide](00-GUIDE.md) is the summary. This file is the deep dive.
 
 ---
 
