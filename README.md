@@ -4,6 +4,18 @@
 >
 > **This is the only document you need.** It explains what Pulseboard is, how every part works, how to run it, deploy it and fix it, and the proof that it works.
 
+## Documentation set (read in order)
+| # | Doc | Covers |
+|---|---|---|
+| 01 | [docs/01-FEATURES.md](docs/01-FEATURES.md) | Every feature: who can use it, steps, API calls, data, errors, test checklist |
+| 02 | [docs/02-FRONTEND.md](docs/02-FRONTEND.md) | Angular monorepo: files, boot, routes and guards, signals, HTTP and token refresh, components, styling, config |
+| 03 | [docs/03-BACKEND.md](docs/03-BACKEND.md) | Identity + API: modules, every endpoint, algorithms, publishing, workers, cache, token verification, tests |
+| 04 | [docs/04-DATABASE.md](docs/04-DATABASE.md) | Every table and column, migrations, Redis keyspace, queue, integrity, backup |
+| 05 | [docs/05-DOCKER.md](docs/05-DOCKER.md) | Images, compose services, gateway config line by line, commands, troubleshooting |
+| 06 | [docs/06-DEPLOYMENT.md](docs/06-DEPLOYMENT.md) | Azure resources, Bicep, Key Vault, APIM, deploy script, cost, CI/CD, fixes |
+| — | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | A-to-Z architecture with diagrams and **real screenshots** |
+| — | [docs/EVIDENCE.md](docs/EVIDENCE.md) | Captured proof: 17/17 end-to-end checks on Azure and Docker, CI runs |
+
 ## Repositories and URLs to test
 
 ### Repositories (GitHub, private)
