@@ -599,7 +599,7 @@ flowchart TB
       AI[App Insights + Log Analytics]
       AL[Action group + alerts + budget]
     end
-    SWA -. config.json .-> APIM
+    SWA -.->|"config.json"| APIM
     APIM --> IDAPP
     APIM --> APIAPP
     IDAPP --> PG
