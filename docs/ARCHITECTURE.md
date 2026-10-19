@@ -263,7 +263,7 @@ sequenceDiagram
     GW->>MW: + X-Request-ID, X-Forwarded-For
     MW->>SEC: dependency
     SEC->>J: signing key for kid (cached 5 min)
-    SEC->>SEC: verify RS256, iss, aud, exp, typ; perms contains boards:read
+    SEC->>SEC: verify RS256, iss, aud, exp, typ, perms contains boards:read
     MW->>R: GET board:<id> (ownership check, cached)
     MW->>DB: SELECT tiles WHERE board_id ORDER BY position   (1 query)
     MW->>R: MGET tile:<id>:<hour> x N                    (1 round trip)
@@ -310,7 +310,7 @@ sequenceDiagram
     Note over B: attacker replays stolen R1
     B->>I: refresh R1
     I->>I: R1 already revoked, so revoke ALL of family F (R2 too)
-    I-->>B: 401 "already used; sign in again"
+    I-->>B: 401 "already used, sign in again"
 ```
 
 ### I.3 Keys
